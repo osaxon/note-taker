@@ -1,9 +1,8 @@
 const express = require('express');
 const path = require('path');
-const uuid = require('uuid/v4');
 
 
-console.log(uuid());
+
 const PORT = 3000;
 
 const app = express();
@@ -14,7 +13,8 @@ app.use(express.static('public'))
 const testArray = [
     {
         title:"Test Title",
-        text:"Test text"
+        text:"Test text",
+        id: 123456,
     }
 ]
 
@@ -25,7 +25,7 @@ app.get('/notes', (req, res) => res.sendFile(path.join(__dirname, 'public', 'not
 app.get('/api/notes', (req, res) => res.json(testArray))
 
 app.delete('/api/notes/:id', (req, res) => {
-    const noteID = req.body;
+    const noteID = req.params.id;
     console.log(noteID)
     res.end("Success");
 })
