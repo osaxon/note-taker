@@ -12,8 +12,9 @@ const app = express();
 app.use(express.json());
 app.use(express.static('public'))
 app.use(express.static('db'));
+const DB = path.join(__dirname, 'db', 'db.json');
 
-const notes = JSON.parse(fs.readFileSync(path.join(__dirname, 'db', 'db.json'), 'utf-8'));
+const notes = JSON.parse(fs.readFileSync(DB, 'utf-8'));
 
 
 app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'public', 'index.html')));
@@ -31,13 +32,20 @@ app.post('/api/notes', (req, res) => {
         text: newText,
         id: newID
     }
-    console.log(newNote);
     notes.push(newNote);
+    writeToDB(notes)
     res.json("Success");
 })
+
+function writeToDB(data) {
+    notesString = JSON.stringify(data, null, 2)
+    fs.writeFileSync(DB, notesString, 'utf-8');
+    return;
+}
 
 app.delete('/api/notes/:id', (req, res) => {
     const noteID = req.params.id;
 })
+
 
 app.listen(PORT, () => console.log(`Listening on port ${PORT}...`))
