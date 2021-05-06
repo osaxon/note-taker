@@ -1,7 +1,7 @@
 const express = require('express');
 const path = require('path');
 const fs = require('fs');
-const { json } = require('express');
+const {v4: uuidv4} = require ('uuid');
 
 
 
@@ -19,23 +19,25 @@ const notes = JSON.parse(fs.readFileSync(path.join(__dirname, 'db', 'db.json'), 
 app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'public', 'index.html')));
 app.get('/notes', (req, res) => res.sendFile(path.join(__dirname, 'public', 'notes.html')))
 app.get('/api/notes', (req, res) => {
-    console.log(notes)
     res.json(notes)
 })
 
 app.post('/api/notes', (req, res) => {
-    const newNote = req.body;
-    const id = '192894738';
-    newNote.id = id;
+    const newTitle = req.body.title;
+    const newText = req.body.text;
+    const newID = uuidv4();
+    const newNote = {
+        title: newTitle,
+        text: newText,
+        id: newID
+    }
     console.log(newNote);
     notes.push(newNote);
-    console.log(notes)
     res.json("Success");
 })
 
 app.delete('/api/notes/:id', (req, res) => {
     const noteID = req.params.id;
-    console.log(testArray);
 })
 
 app.listen(PORT, () => console.log(`Listening on port ${PORT}...`))
