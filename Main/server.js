@@ -14,13 +14,19 @@ app.use(express.static('public'))
 app.use(express.static('db'));
 const DB = path.join(__dirname, 'db', 'db.json');
 
-const notes = JSON.parse(fs.readFileSync(DB, 'utf-8'));
+let notes;
+
+function loadDB(){
+    notes = JSON.parse(fs.readFileSync(DB, 'utf-8'));
+    return notes;
+};
+
 
 
 app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'public', 'index.html')));
 app.get('/notes', (req, res) => res.sendFile(path.join(__dirname, 'public', 'notes.html')))
 app.get('/api/notes', (req, res) => {
-    res.json(notes)
+    res.json(loadDB())
 })
 
 app.post('/api/notes', (req, res) => {
@@ -45,7 +51,15 @@ function writeToDB(data) {
 
 app.delete('/api/notes/:id', (req, res) => {
     const noteID = req.params.id;
+    const filteredNotes = loadDB().filter(note => note.id !== noteID);
+    writeToDB(filteredNotes);
+    loadDB();
+    return;
 })
 
 
-app.listen(PORT, () => console.log(`Listening on port ${PORT}...`))
+app.listen(PORT, function(err) {
+    if (err) console.log("Error")
+    console.log(`Listening on port ${PORT}...`)
+    loadDB()
+});
