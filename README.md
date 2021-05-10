@@ -13,8 +13,7 @@ An application built to demonstrate the capabilities of node.js and the express 
   **[License Information](#license)**<br>
   
 ## Installation Instructions
-Clone the repo and run npm install to install all node packages then run the server.js file using node.
-Open your browser and type localhost:3000 as the url.
+Access via [https://easy-note-taker-app.herokuapp.com/](https://easy-note-taker-app.herokuapp.com/)
 
   
 ## Contributors
